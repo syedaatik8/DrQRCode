@@ -7,6 +7,7 @@ import { SignUp } from './pages/SignUp'
 import { ForgotPassword } from './pages/ForgotPassword'
 import { Dashboard } from './pages/Dashboard'
 import { QRGenerator } from './pages/QRGenerator'
+import { ResumeBuilder } from './pages/ResumeBuilder'
 import { Settings } from './pages/Settings'
 
 function App() {
@@ -31,6 +32,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <QRGenerator />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resume-builder"
+            element={
+              <ProtectedRoute>
+                <ResumeBuilder />
               </ProtectedRoute>
             }
           />

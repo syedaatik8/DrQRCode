@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Home, QrCode, BarChart3, HelpCircle, Settings, Upload } from 'lucide-react'
+import { Home, QrCode, BarChart3, HelpCircle, Settings, Upload, FileText } from 'lucide-react'
 
 const navigation = [
   { name: 'Home', href: '/dashboard', icon: Home },
   { name: 'Generate QR Code', href: '/generate', icon: QrCode },
+  { name: 'Resume Builder', href: '/resume-builder', icon: FileText },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
 ]
 
