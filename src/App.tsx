@@ -9,6 +9,7 @@ import { Dashboard } from './pages/Dashboard'
 import { QRGenerator } from './pages/QRGenerator'
 import { ResumeBuilder } from './pages/ResumeBuilder'
 import { Settings } from './pages/Settings'
+import { PublicResume } from './pages/PublicResume'
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/resume/:firstName" element={<PublicResume />} />
         </Routes>
       </Router>
     </AuthProvider>

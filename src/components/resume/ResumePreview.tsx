@@ -19,8 +19,9 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
   }
 
   const getResumeUrl = () => {
-    if (resumeData.qr_code_id) {
-      return `${window.location.origin}/resume/${resumeData.qr_code_id}`
+    if (resumeData.qr_code_id && resumeData.full_name) {
+      const firstName = resumeData.full_name.split(' ')[0].toLowerCase()
+      return `${window.location.origin}/resume/${firstName}`
     }
     return ''
   }

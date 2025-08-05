@@ -53,6 +53,16 @@ export const ResumeBuilder: React.FC = () => {
   const [success, setSuccess] = useState('')
   const [qrCodeUrl, setQrCodeUrl] = useState('')
 
+  // Generate QR code URL whenever resumeData changes
+  useEffect(() => {
+    if (resumeData.qr_code_id && resumeData.full_name) {
+      const firstName = resumeData.full_name.split(' ')[0].toLowerCase()
+      const resumeUrl = `${window.location.origin}/resume/${firstName}`
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(resumeUrl)}`
+      setQrCodeUrl(qrUrl)
+    }
+  }, [resumeData.qr_code_id, resumeData.full_name])
+
   useEffect(() => {
     if (user) {
       loadResumeData()
@@ -96,12 +106,6 @@ export const ResumeBuilder: React.FC = () => {
           portfolio_url: resume.portfolio_url || ''
         })
 
-        // Generate QR code URL
-        if (resume.qr_code_id) {
-          const qrUrl = `${window.location.origin}/resume/${resume.qr_code_id}`
-          const qrCodeImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`
-          setQrCodeUrl(qrCodeImageUrl)
-        }
 
         // Load sections
         await loadResumeSections(resume.id)
