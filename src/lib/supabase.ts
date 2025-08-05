@@ -16,6 +16,7 @@ export type Database = {
           email: string
           phone?: string
           plan: string
+          profile_photo_url?: string
           created_at: string
           updated_at: string
         }
@@ -26,6 +27,7 @@ export type Database = {
           email: string
           phone?: string
           plan?: string
+          profile_photo_url?: string
           created_at?: string
           updated_at?: string
         }
@@ -36,6 +38,7 @@ export type Database = {
           email?: string
           phone?: string
           plan?: string
+          profile_photo_url?: string
           created_at?: string
           updated_at?: string
         }

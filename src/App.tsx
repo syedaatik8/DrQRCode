@@ -6,6 +6,8 @@ import { SignIn } from './pages/SignIn'
 import { SignUp } from './pages/SignUp'
 import { ForgotPassword } from './pages/ForgotPassword'
 import { Dashboard } from './pages/Dashboard'
+import { QRGenerator } from './pages/QRGenerator'
+import { Settings } from './pages/Settings'
 
 function App() {
   return (
@@ -28,7 +30,7 @@ function App() {
             path="/generate"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <QRGenerator />
               </ProtectedRoute>
             }
           />
@@ -52,7 +54,7 @@ function App() {
             path="/settings"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Settings />
               </ProtectedRoute>
             }
           />

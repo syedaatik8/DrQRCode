@@ -22,10 +22,15 @@ export const Sidebar: React.FC = () => {
     <div className="flex flex-col h-full bg-gray-900 border-r border-gray-800">
       {/* Logo */}
       <div className="flex items-center px-6 py-4 border-b border-gray-800">
-        <div className="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center mr-3">
-          <Upload className="w-5 h-5 text-gray-900" />
+        <img 
+          src="/favicon-drqrcode.png" 
+          alt="Dr. QR Code" 
+          className="w-8 h-8 mr-3"
+        />
+        <div>
+          <span className="text-xl font-semibold text-white">Dr. QR Code</span>
+          <p className="text-xs text-gray-400">Not A Real Doctor</p>
         </div>
-        <span className="text-xl font-semibold text-white">QRGen</span>
       </div>
 
       {/* Main Navigation */}
