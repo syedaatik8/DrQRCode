@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, Upload } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { NotificationModal } from '../components/NotificationModal'
 
 export const SignUp: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ export const SignUp: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
   
   const { signUp } = useAuth()
   const navigate = useNavigate()
@@ -46,7 +48,11 @@ export const SignUp: React.FC = () => {
 
     try {
       await signUp(formData.email, formData.password, formData)
-      navigate('/signin')
+      setShowSuccessModal(true)
+      // Navigate to signin after showing the modal
+      setTimeout(() => {
+        navigate('/signin')
+      }, 2000)
     } catch (err: any) {
       setError(err.message || 'An error occurred during sign up')
     } finally {
@@ -208,6 +214,14 @@ export const SignUp: React.FC = () => {
           </div>
         </form>
       </div>
+
+     <NotificationModal
+       isOpen={showSuccessModal}
+       onClose={() => setShowSuccessModal(false)}
+       title="Account Created Successfully!"
+       message="Please check your email to verify your account before signing in."
+       type="success"
+     />
     </div>
   )
 }

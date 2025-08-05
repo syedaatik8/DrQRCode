@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 
 export const Settings: React.FC = () => {
-  const { user } = useAuth()
+  const { user, profile, refreshProfile } = useAuth()
   const fileInputRef = useRef<HTMLInputElement>(null)
   
   const [formData, setFormData] = useState({
@@ -20,42 +20,26 @@ export const Settings: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const [profile, setProfile] = useState<any>(null)
 
-  // Load user profile data
+  // Initialize form data from profile
   React.useEffect(() => {
-    const loadProfile = async () => {
-      if (!user) return
-      
+    if (profile) {
       try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single()
-
-        if (error) throw error
-        
-        if (data) {
-          setProfile(data)
-          setFormData({
-            firstName: data.first_name || '',
-            lastName: data.last_name || '',
-            email: data.email || user.email || '',
-            phone: data.phone || '',
-            profilePhoto: null
-          })
-          if (data.profile_photo_url) {
-            setPreviewUrl(data.profile_photo_url)
-          }
+        setFormData({
+          firstName: profile.first_name || '',
+          lastName: profile.last_name || '',
+          email: profile.email || user?.email || '',
+          phone: profile.phone || '',
+          profilePhoto: null
+        })
+        if (profile.profile_photo_url) {
+          setPreviewUrl(profile.profile_photo_url)
         }
       } catch (err) {
         console.error('Error loading profile:', err)
       }
     }
-
-    loadProfile()
-  }, [user])
+  }, [profile, user])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -140,16 +124,8 @@ export const Settings: React.FC = () => {
 
       setSuccess('Profile updated successfully!')
       
-      // Refresh profile data
-      const { data: updatedProfile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-      
-      if (updatedProfile) {
-        setProfile(updatedProfile)
-      }
+      // Refresh profile data in context
+      await refreshProfile()
       
     } catch (err: any) {
       setError(err.message || 'An error occurred while updating your profile')

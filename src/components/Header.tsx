@@ -2,42 +2,18 @@ import React, { useState, useRef, useEffect } from 'react'
 import { ChevronDown, Settings, LogOut, User } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
 
 export const Header: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const { user, signOut } = useAuth()
+  const { user, profile, profileLoading, signOut } = useAuth()
   const navigate = useNavigate()
-  const [profile, setProfile] = useState<any>(null)
-
-  // Load user profile data
-  useEffect(() => {
-    const loadProfile = async () => {
-      if (!user) return
-      
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single()
-
-        if (error) throw error
-        setProfile(data)
-      } catch (err) {
-        console.error('Error loading profile:', err)
-      }
-    }
-
-    loadProfile()
-  }, [user])
 
   const userData = {
-    firstName: profile?.first_name || 'User',
+    firstName: profileLoading ? 'Loading...' : (profile?.first_name || 'User'),
     lastName: profile?.last_name || '',
     email: user?.email || 'user@example.com',
-    plan: 'Free Plan',
+    plan: profile?.plan ? `${profile.plan.charAt(0).toUpperCase() + profile.plan.slice(1)} Plan` : 'Free Plan',
     profilePhotoUrl: profile?.profile_photo_url
   }
 
