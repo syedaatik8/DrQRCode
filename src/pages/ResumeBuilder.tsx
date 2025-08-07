@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { DashboardLayout } from '../components/DashboardLayout'
 import { ResumeForm } from '../components/resume/ResumeForm'
-import { ResumePreview } from '../components/resume/ResumePreview'
+import { ResumeProgress } from '../components/resume/ResumeProgress'
+import { TemplateSelector } from '../components/resume/TemplateSelector'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
-import { User, FileText, Save, Eye } from 'lucide-react'
+import { User, FileText, Save, Eye, Palette } from 'lucide-react'
 
 interface ResumeData {
   id?: string
@@ -52,6 +53,9 @@ export const ResumeBuilder: React.FC = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [qrCodeUrl, setQrCodeUrl] = useState('')
+  const [selectedTemplate, setSelectedTemplate] = useState('default')
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
 
   // Generate QR code URL whenever resumeData changes
   useEffect(() => {
@@ -64,10 +68,10 @@ export const ResumeBuilder: React.FC = () => {
   }, [resumeData.qr_code_id, resumeData.full_name])
 
   useEffect(() => {
-    if (user) {
+    if (user && !isInitialized) {
       loadResumeData()
     }
-  }, [user])
+  }, [user, isInitialized])
 
   const loadResumeData = async () => {
     if (!user) return
@@ -109,9 +113,12 @@ export const ResumeBuilder: React.FC = () => {
 
         // Load sections
         await loadResumeSections(resume.id)
+        setSelectedTemplate(resume.template || 'default')
       }
+      setIsInitialized(true)
     } catch (err: any) {
       setError(err.message || 'Failed to load resume data')
+      setIsInitialized(true)
     } finally {
       setLoading(false)
     }
@@ -156,7 +163,8 @@ export const ResumeBuilder: React.FC = () => {
           summary: resumeData.summary,
           linkedin_url: resumeData.linkedin_url,
           github_url: resumeData.github_url,
-          portfolio_url: resumeData.portfolio_url
+          portfolio_url: resumeData.portfolio_url,
+          template: selectedTemplate
         })
         .eq('id', resumeData.id)
 
@@ -171,7 +179,7 @@ export const ResumeBuilder: React.FC = () => {
     }
   }
 
-  if (loading) {
+  if (loading && !isInitialized) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-64">
@@ -194,14 +202,23 @@ export const ResumeBuilder: React.FC = () => {
               </h1>
               <p className="text-gray-600">Create and manage your professional resume with QR code sharing.</p>
             </div>
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="inline-flex items-center px-4 py-2 bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-gray-900 font-medium rounded-lg transition-colors"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {saving ? 'Saving...' : 'Save Resume'}
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowTemplateSelector(true)}
+                className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
+              >
+                <Palette className="w-4 h-4 mr-2" />
+                Select Template
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="inline-flex items-center px-4 py-2 bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-gray-900 font-medium rounded-lg transition-colors"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {saving ? 'Saving...' : 'Save Resume'}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -233,13 +250,29 @@ export const ResumeBuilder: React.FC = () => {
 
           {/* Preview Section - 35% */}
           <div className="lg:col-span-1">
-            <ResumePreview
+            <div className="space-y-6">
+              <ResumePreview
+                resumeData={resumeData}
+                resumeSections={resumeSections}
+                qrCodeUrl={qrCodeUrl}
+                template={selectedTemplate}
+              />
+              
+            <ResumeProgress
               resumeData={resumeData}
               resumeSections={resumeSections}
-              qrCodeUrl={qrCodeUrl}
             />
+            </div>
           </div>
         </div>
+
+        {/* Template Selector Modal */}
+        <TemplateSelector
+          isOpen={showTemplateSelector}
+          onClose={() => setShowTemplateSelector(false)}
+          currentTemplate={selectedTemplate}
+          onSelectTemplate={setSelectedTemplate}
+        />
       </div>
     </DashboardLayout>
   )

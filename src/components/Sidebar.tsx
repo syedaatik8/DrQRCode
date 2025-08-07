@@ -1,6 +1,8 @@
 import React from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Home, QrCode, BarChart3, HelpCircle, Settings, Upload, FileText } from 'lucide-react'
+import { HelpModal } from './HelpModal'
 
 const navigation = [
   { name: 'Home', href: '/dashboard', icon: Home },
@@ -16,6 +18,7 @@ const bottomNavigation = [
 
 export const Sidebar: React.FC = () => {
   const location = useLocation()
+  const [showHelpModal, setShowHelpModal] = useState(false)
 
   const isActive = (href: string) => location.pathname === href
 
@@ -57,24 +60,31 @@ export const Sidebar: React.FC = () => {
 
       {/* Bottom Navigation */}
       <div className="px-4 py-4 border-t border-gray-800 space-y-2">
-        {bottomNavigation.map((item) => {
-          const Icon = item.icon
-          return (
-            <Link
-              key={item.name}
-              to={item.href}
-              className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                isActive(item.href)
-                  ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20'
-                  : 'text-gray-300 hover:text-white hover:bg-gray-800'
-              }`}
-            >
-              <Icon className="w-5 h-5 mr-3" />
-              {item.name}
-            </Link>
-          )
-        })}
+        <button
+          onClick={() => setShowHelpModal(true)}
+          className="flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors text-gray-300 hover:text-white hover:bg-gray-800"
+        >
+          <HelpCircle className="w-5 h-5 mr-3" />
+          Help
+        </button>
+        
+        <Link
+          to="/settings"
+          className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+            isActive('/settings')
+              ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20'
+              : 'text-gray-300 hover:text-white hover:bg-gray-800'
+          }`}
+        >
+          <Settings className="w-5 h-5 mr-3" />
+          Settings
+        </Link>
       </div>
+      
+      <HelpModal 
+        isOpen={showHelpModal} 
+        onClose={() => setShowHelpModal(false)} 
+      />
     </div>
   )
 }

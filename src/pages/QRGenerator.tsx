@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { DashboardLayout } from '../components/DashboardLayout'
-import { Download, Link as LinkIcon, Crown } from 'lucide-react'
+import { Download, Link as LinkIcon, Crown, Grid3X3 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 export const QRGenerator: React.FC = () => {
+  const navigate = useNavigate()
   const [url, setUrl] = useState('')
   const [qrCode, setQrCode] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
@@ -52,11 +54,20 @@ export const QRGenerator: React.FC = () => {
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900">Generate QR Code</h1>
           <p className="text-gray-600">Create QR codes for your URLs, text, or other content.</p>
+          <div className="mt-4">
+            <button
+              onClick={() => navigate('/bulk-qr')}
+              className="inline-flex items-center px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
+            >
+              <Grid3X3 className="w-4 h-4 mr-2" />
+              Generate Bulk QR Codes
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Left Column - Input */}
-          <div className="space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <div className="bg-white rounded-lg border border-gray-200 p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Enter Your Content</h3>
               
@@ -141,7 +152,7 @@ export const QRGenerator: React.FC = () => {
           </div>
 
           {/* Right Column - Preview */}
-          <div className="space-y-6">
+          <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-lg border border-gray-200 p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Preview</h3>
               

@@ -7,6 +7,7 @@ import { SignUp } from './pages/SignUp'
 import { ForgotPassword } from './pages/ForgotPassword'
 import { Dashboard } from './pages/Dashboard'
 import { QRGenerator } from './pages/QRGenerator'
+import { BulkQRGenerator } from './pages/BulkQRGenerator'
 import { ResumeBuilder } from './pages/ResumeBuilder'
 import { Settings } from './pages/Settings'
 import { PublicResume } from './pages/PublicResume'
@@ -33,6 +34,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <QRGenerator />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bulk-qr"
+            element={
+              <ProtectedRoute>
+                <BulkQRGenerator />
               </ProtectedRoute>
             }
           />
