@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { DashboardLayout } from '../components/DashboardLayout'
 import { ResumeForm } from '../components/resume/ResumeForm'
 import { ResumeProgress } from '../components/resume/ResumeProgress'
+import { ResumePreview } from '../components/resume/ResumePreview'
 import { TemplateSelector } from '../components/resume/TemplateSelector'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
@@ -251,13 +252,6 @@ export const ResumeBuilder: React.FC = () => {
           {/* Preview Section - 35% */}
           <div className="lg:col-span-1">
             <div className="space-y-6">
-              <ResumePreview
-                resumeData={resumeData}
-                resumeSections={resumeSections}
-                qrCodeUrl={qrCodeUrl}
-                template={selectedTemplate}
-              />
-              
             <ResumeProgress
               resumeData={resumeData}
               resumeSections={resumeSections}
