@@ -6,7 +6,7 @@ import { ResumePreview } from '../components/resume/ResumePreview'
 import { TemplateSelector } from '../components/resume/TemplateSelector'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
-import { User, FileText, Save, Eye, Palette } from 'lucide-react'
+import { User, FileText, Save, Eye, Palette, QrCode, Download } from 'lucide-react'
 
 interface ResumeData {
   id?: string
@@ -252,6 +252,62 @@ export const ResumeBuilder: React.FC = () => {
           {/* Preview Section - 35% */}
           <div className="lg:col-span-1">
             <div className="space-y-6">
+            {/* QR Code Section */}
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center justify-center">
+                  <QrCode className="w-5 h-5 mr-2 text-yellow-600" />
+                  Resume QR Code
+                </h3>
+                
+                {qrCodeUrl ? (
+                  <div className="space-y-4">
+                    <div className="flex justify-center">
+                      <img
+                        src={qrCodeUrl}
+                        alt="Resume QR Code"
+                        className="w-32 h-32 border border-gray-200 rounded-lg"
+                      />
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Scan to view your resume online
+                    </p>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => {
+                          const firstName = resumeData.full_name.split(' ')[0].toLowerCase()
+                          const resumeUrl = `${window.location.origin}/resume/${firstName}`
+                          window.open(resumeUrl, '_blank')
+                        }}
+                        disabled={!resumeData.full_name}
+                        className="flex-1 inline-flex items-center justify-center px-3 py-2 bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed text-gray-700 text-sm font-medium rounded-lg transition-colors"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        Preview
+                      </button>
+                      <button
+                        onClick={() => {
+                          const link = document.createElement('a')
+                          link.href = qrCodeUrl
+                          link.download = 'resume-qr-code.png'
+                          link.click()
+                        }}
+                        className="flex-1 inline-flex items-center justify-center px-3 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 text-sm font-medium rounded-lg transition-colors"
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Download
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <QrCode className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500">Save your resume to generate QR code</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
             <ResumeProgress
               resumeData={resumeData}
               resumeSections={resumeSections}
